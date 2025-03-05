@@ -185,8 +185,8 @@ export function InstaCashOffer() {
                       </div>
                     </div>
                   )}
-                </div>
-              </div>
+        </div>
+      </div>
 
               {/* Deposit Account Selection */}
               <div>
@@ -205,7 +205,7 @@ export function InstaCashOffer() {
                       onClick={() => setSelectedAccount(account.id)}
                     >
                       <div className="flex justify-between items-center">
-                        <div>
+        <div>
                           <p className="font-medium">{account.name}</p>
                           <p className="text-sm text-gray-500">{account.number}</p>
                         </div>
@@ -317,8 +317,8 @@ export function InstaCashOffer() {
                     I agree to use electronic records and signatures
                   </span>
                 </label>
-              </div>
-            </div>
+          </div>
+        </div>
 
             <button
               onClick={handleDocuSign}
@@ -365,7 +365,7 @@ export function InstaCashOffer() {
             >
               Return to Dashboard
             </button>
-          </div>
+        </div>
         );
 
       default:
@@ -378,7 +378,7 @@ export function InstaCashOffer() {
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center">
+          <div className="flex items-center">
               <Sun className="w-8 h-8 text-orange-600" />
               <span className="ml-2 text-xl font-bold">Suncoast Credit Union</span>
             </div>

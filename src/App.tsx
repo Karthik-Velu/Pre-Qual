@@ -1,38 +1,140 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import { HomePage } from './components/HomePage';
-import { LoginPage } from './components/LoginPage';
-import { EligibilityCheck } from './components/EligibilityCheck';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Dashboard } from './components/Dashboard';
 import { InstaCashOffer } from './components/InstaCashOffer';
 import { PreApprovedOffer } from './components/PreApprovedOffer';
-import { PreQualificationForm } from './components/PreQualificationForm';
+import { PreQualification } from './components/PreQualification';
 
-function App() {
+interface LoginPageWrapperProps {
+  setIsLoggedIn: (value: boolean) => void;
+  setUsername: (value: string) => void;
+}
+
+function LoginPageWrapper({ setIsLoggedIn, setUsername }: LoginPageWrapperProps) {
+  const [loginData, setLoginData] = useState({
+    username: '',
+    password: ''
+  });
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoggedIn(true);
+    setUsername(loginData.username);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-xl shadow-lg">
+        <div>
+          <h2 className="text-center text-3xl font-bold text-gray-900">Welcome Back</h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Sign in to access your account
+          </p>
+        </div>
+        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                Username
+              </label>
+              <input
+                id="username"
+                name="username"
+                type="text"
+                required
+                value={loginData.username}
+                onChange={(e) => setLoginData(prev => ({ ...prev, username: e.target.value }))}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                value={loginData.password}
+                onChange={(e) => setLoginData(prev => ({ ...prev, password: e.target.value }))}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Sign in
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState('');
+
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPageWrapper />} />
-        <Route path="/eligibility" element={<EligibilityCheck />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/insta-cash" element={<InstaCashOffer />} />
-        <Route path="/pre-approved" element={<PreApprovedOffer />} />
-        <Route path="/pre-qualification" element={<PreQualificationForm />} />
+        <Route
+          path="/"
+          element={
+            isLoggedIn ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <LoginPageWrapper setIsLoggedIn={setIsLoggedIn} setUsername={setUsername} />
+            )
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            isLoggedIn ? (
+              <Dashboard username={username} />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
+        <Route
+          path="/instacash"
+          element={
+            isLoggedIn ? (
+              <InstaCashOffer />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
+        <Route
+          path="/pre-approved"
+          element={
+            isLoggedIn ? (
+              <PreApprovedOffer />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
+        <Route
+          path="/pre-qualification"
+          element={
+            isLoggedIn ? (
+              <PreQualification />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
       </Routes>
     </Router>
   );
 }
-
-function LoginPageWrapper() {
-  const navigate = useNavigate();
-  
-  const handleLogin = () => {
-    console.log('Login clicked, navigating to dashboard...');
-    navigate('/dashboard');
-  };
-
-  return <LoginPage onLogin={handleLogin} />;
-}
-
-export default App;
