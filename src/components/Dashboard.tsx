@@ -6,7 +6,9 @@ import {
   DollarSign,
   Gift,
   FileText,
-  CreditCard
+  CreditCard,
+  Home,
+  Car
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -41,122 +43,111 @@ export function Dashboard() {
     }
   ];
 
+  const preApprovedOffers = [
+    {
+      id: 'personal',
+      name: 'Personal Loan',
+      maxAmount: 25000,
+      baseRate: 7.99,
+      term: { min: 12, max: 60 },
+      icon: <CreditCard className="w-8 h-8 text-blue-600" />
+    },
+    {
+      id: 'home',
+      name: 'Home Equity',
+      maxAmount: 150000,
+      baseRate: 5.99,
+      term: { min: 60, max: 180 },
+      icon: <Home className="w-8 h-8 text-blue-600" />
+    },
+    {
+      id: 'auto',
+      name: 'Auto Loan',
+      maxAmount: 50000,
+      baseRate: 4.99,
+      term: { min: 36, max: 72 },
+      icon: <Car className="w-8 h-8 text-blue-600" />
+    }
+  ];
+
+  const instaCashOffer = {
+    maxAmount: 5000,
+    baseRate: 8.99,
+    term: { min: 12, max: 24 },
+    icon: <DollarSign className="w-8 h-8 text-orange-600" />
+  };
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Offers and Pre-Qualification Section */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-6">Special Offers & Pre-Qualification</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <button 
-            onClick={() => navigate('/insta-cash')}
-            className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow text-left"
-          >
-            <div className="flex items-center mb-4">
-              <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mr-4">
-                <Gift className="w-6 h-6 text-orange-600" />
-              </div>
-              <h3 className="text-lg font-semibold">Insta Cash Offer</h3>
-            </div>
-            <p className="text-gray-600">Get instant access to cash with our special offer</p>
-          </button>
-
-          <button 
-            onClick={() => navigate('/pre-approved')}
-            className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow text-left"
-          >
-            <div className="flex items-center mb-4">
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
-                <CreditCard className="w-6 h-6 text-green-600" />
-              </div>
-              <h3 className="text-lg font-semibold">Pre-Approved Offers</h3>
-            </div>
-            <p className="text-gray-600">View your personalized pre-approved offers</p>
-          </button>
-
-          <button 
-            onClick={() => navigate('/pre-qualification')}
-            className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow text-left"
-          >
-            <div className="flex items-center mb-4">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
-                <FileText className="w-6 h-6 text-blue-600" />
-              </div>
-              <h3 className="text-lg font-semibold">Pre-Qualification</h3>
-            </div>
-            <p className="text-gray-600">Check your eligibility for various products</p>
-          </button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Accounts Overview */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">Your Accounts</h2>
-          <div className="space-y-4">
-            {accounts.map((account, index) => (
-              <div key={index} className="p-4 border rounded-lg">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="font-medium">{account.name}</p>
-                    <p className="text-sm text-gray-500">{account.number}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold">${account.balance.toLocaleString()}</p>
-                    <button className="text-sm text-blue-600 hover:text-blue-500">
-                      View Details
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-2 gap-4">
-            <button className="p-4 border rounded-lg hover:bg-gray-50 transition-colors">
-              <DollarSign className="w-6 h-6 text-blue-600 mb-2" />
-              <p className="font-medium">Send Money</p>
-            </button>
-            <button className="p-4 border rounded-lg hover:bg-gray-50 transition-colors">
-              <Clock className="w-6 h-6 text-blue-600 mb-2" />
-              <p className="font-medium">Scheduled Payments</p>
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+            <button
+              onClick={() => navigate('/')}
+              className="text-gray-600 hover:text-gray-900"
+            >
+              Logout
             </button>
           </div>
         </div>
+      </header>
 
-        {/* Recent Transactions */}
-        <div className="md:col-span-2 bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">Recent Transactions</h2>
-          <div className="space-y-4">
-            {recentTransactions.map((transaction) => (
-              <div key={transaction.id} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center">
-                  {transaction.type === 'credit' ? (
-                    <ArrowUpRight className="w-5 h-5 text-green-500 mr-3" />
-                  ) : (
-                    <ArrowDownRight className="w-5 h-5 text-red-500 mr-3" />
-                  )}
-                  <div>
-                    <p className="font-medium">{transaction.description}</p>
-                    <p className="text-sm text-gray-500">{transaction.date}</p>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="space-y-8">
+          {/* Pre-Approved Offers Section */}
+          <section>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Your Pre-Approved Offers</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {preApprovedOffers.map((offer) => (
+                <div
+                  key={offer.id}
+                  className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => navigate('/pre-approved')}
+                >
+                  <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mb-4">
+                    {offer.icon}
                   </div>
+                  <h3 className="text-lg font-semibold mb-2">{offer.name}</h3>
+                  <p className="text-2xl font-bold mb-2">Up to ${offer.maxAmount.toLocaleString()}</p>
+                  <div className="space-y-1 text-sm text-gray-600">
+                    <p>From {offer.baseRate}% APR</p>
+                    <p>{offer.term.min}-{offer.term.max} months</p>
+                  </div>
+                  <button className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                    View Offer
+                  </button>
                 </div>
-                <span className={`font-semibold ${
-                  transaction.type === 'credit' ? 'text-green-600' : 'text-red-600'
-                }`}>
-                  ${Math.abs(transaction.amount).toLocaleString()}
-                </span>
+              ))}
+            </div>
+          </section>
+
+          {/* InstaCash Offer Section */}
+          <section>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Quick Cash Solution</h2>
+            <div className="max-w-md">
+              <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl shadow-sm p-6 text-white">
+                <div className="flex items-center justify-center w-12 h-12 bg-white bg-opacity-20 rounded-full mb-4">
+                  {instaCashOffer.icon}
+                </div>
+                <h3 className="text-xl font-semibold mb-2">InstaCash Offer</h3>
+                <p className="text-3xl font-bold mb-2">Up to ${instaCashOffer.maxAmount.toLocaleString()}</p>
+                <div className="space-y-1 text-sm opacity-90">
+                  <p>From {instaCashOffer.baseRate}% APR</p>
+                  <p>{instaCashOffer.term.min}-{instaCashOffer.term.max} months</p>
+                  <p>Same Day Funding Available*</p>
+                </div>
+                <button 
+                  onClick={() => navigate('/instacash')}
+                  className="mt-4 w-full bg-white text-orange-600 py-2 px-4 rounded-lg hover:bg-orange-50 transition-colors"
+                >
+                  Get Cash Now
+                </button>
               </div>
-            ))}
-          </div>
-          <button className="mt-4 text-blue-600 hover:text-blue-500 font-medium">
-            View All Transactions
-          </button>
+            </div>
+          </section>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
