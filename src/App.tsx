@@ -77,7 +77,7 @@ function LoginPageWrapper({ setIsLoggedIn, setUsername }: LoginPageWrapperProps)
   );
 }
 
-export function App() {
+export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
 
