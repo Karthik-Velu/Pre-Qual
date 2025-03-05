@@ -14,52 +14,80 @@ function HomePage() {
   const navigate = useNavigate();
   
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
+      {/* Navigation */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
+          <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <span className="text-2xl font-bold">PreQual</span>
+              <div className="flex-shrink-0 flex items-center">
+                <span className="text-2xl font-bold text-[#662D91]">aven.</span>
+                <span className="text-sm text-gray-600 ml-1">Credit Union</span>
+              </div>
             </div>
+            <nav className="hidden md:flex space-x-8">
+              <a href="#" className="text-gray-600 hover:text-gray-900">Personal</a>
+              <a href="#" className="text-gray-600 hover:text-gray-900">Business</a>
+              <a href="#" className="text-gray-600 hover:text-gray-900">Digital banking</a>
+              <a href="#" className="text-gray-600 hover:text-gray-900">Mortgage</a>
+              <a href="#" className="text-gray-600 hover:text-gray-900">Education</a>
+              <a href="#" className="text-gray-600 hover:text-gray-900">About</a>
+            </nav>
             <div className="flex items-center space-x-4">
+              <button className="p-2 text-gray-600 hover:text-gray-900">
+                <span className="sr-only">Search</span>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </button>
+              <button className="px-3 py-1 rounded-full bg-[#662D91] text-white text-sm">ES</button>
               <button 
                 onClick={() => navigate('/login')}
-                className="px-4 py-2 text-gray-700 font-medium hover:text-blue-600"
+                className="flex items-center space-x-1 text-gray-600 hover:text-gray-900"
               >
-                Login
-              </button>
-              <button 
-                onClick={() => navigate('/eligibility')}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                Check Eligibility
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span>Log In</span>
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Welcome to PreQual</h1>
-          <p className="text-xl text-gray-600 mb-8">Your path to financial success starts here</p>
+      {/* Hero Section */}
+      <div className="relative min-h-[calc(100vh-64px)] bg-gradient-to-r from-[#F7941D] via-[#F15A29] to-[#ED1E79] overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/images/wave-pattern.svg')] opacity-10"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+          <div className="flex items-center justify-between">
+            <div className="w-1/2 pr-12">
+              <h1 className="text-6xl font-bold text-white space-y-2">
+                <span className="block">Unlock Your</span>
+                <span className="block">Financial</span>
+                <span className="block">Potential</span>
+              </h1>
+              <button 
+                onClick={() => navigate('/pre-qualification')}
+                className="mt-8 px-8 py-4 bg-white text-gray-900 rounded-lg text-lg font-semibold hover:bg-gray-50 transition-colors flex items-center space-x-2 shadow-lg"
+              >
+                <span>Pre-Qualify me</span>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+            <div className="w-1/2 relative">
+              <div className="aspect-[4/3] rounded-lg overflow-hidden">
+                <img 
+                  src="/images/hero-image.jpg" 
+                  alt="Father and child smiling" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
         </div>
-        
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">Pre-Approved Offers</h2>
-            <p className="text-gray-600">Discover your pre-approved loan offers with competitive rates.</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">InstaCash</h2>
-            <p className="text-gray-600">Quick cash solutions when you need them most.</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">Pre-Qualification</h2>
-            <p className="text-gray-600">Check your eligibility without affecting your credit score.</p>
-          </div>
-        </div>
-      </main>
+      </div>
     </div>
   );
 }
