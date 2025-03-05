@@ -18,6 +18,8 @@ function LoginPageWrapper({ setIsLoggedIn, setUsername }: LoginPageWrapperProps)
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    // Store the username in localStorage for persistence
+    localStorage.setItem('username', loginData.username);
     setIsLoggedIn(true);
     setUsername(loginData.username);
   };
@@ -26,7 +28,7 @@ function LoginPageWrapper({ setIsLoggedIn, setUsername }: LoginPageWrapperProps)
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-xl shadow-lg">
         <div>
-          <h2 className="text-center text-3xl font-bold text-gray-900">Welcome Back</h2>
+          <h2 className="text-center text-3xl font-bold text-gray-900">Welcome to PreQual</h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Sign in to access your account
           </p>
@@ -78,22 +80,17 @@ function LoginPageWrapper({ setIsLoggedIn, setUsername }: LoginPageWrapperProps)
 }
 
 export default function App() {
+  // Initialize state with values from localStorage if they exist
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState(localStorage.getItem('username') || '');
+
+  // Check if user is "John Doe" for conditional rendering
+  const isJohnDoe = username.toLowerCase() === 'john doe';
 
   return (
     <Router>
       <Routes>
-        <Route
-          path="/"
-          element={
-            isLoggedIn ? (
-              <Navigate to="/dashboard" replace />
-            ) : (
-              <LoginPageWrapper setIsLoggedIn={setIsLoggedIn} setUsername={setUsername} />
-            )
-          }
-        />
+        <Route path="/" element={<LoginPageWrapper setIsLoggedIn={setIsLoggedIn} setUsername={setUsername} />} />
         <Route
           path="/dashboard"
           element={
@@ -117,20 +114,20 @@ export default function App() {
         <Route
           path="/pre-approved"
           element={
-            isLoggedIn ? (
+            isLoggedIn && !isJohnDoe ? (
               <PreApprovedOffer />
             ) : (
-              <Navigate to="/" replace />
+              <Navigate to="/dashboard" replace />
             )
           }
         />
         <Route
           path="/pre-qualification"
           element={
-            isLoggedIn ? (
+            isLoggedIn && isJohnDoe ? (
               <PreQualification />
             ) : (
-              <Navigate to="/" replace />
+              <Navigate to="/dashboard" replace />
             )
           }
         />
