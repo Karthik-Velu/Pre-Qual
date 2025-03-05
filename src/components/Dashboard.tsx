@@ -3,10 +3,15 @@ import {
   ArrowUpRight, 
   ArrowDownRight, 
   Clock,
-  DollarSign
+  DollarSign,
+  Gift,
+  FileText,
+  CreditCard
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export function Dashboard() {
+  const navigate = useNavigate();
   const accounts = [
     { name: 'Checking Account', balance: 5234.89, number: '****4321' },
     { name: 'Savings Account', balance: 12750.50, number: '****8765' }
@@ -38,6 +43,51 @@ export function Dashboard() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Offers and Pre-Qualification Section */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold mb-6">Special Offers & Pre-Qualification</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <button 
+            onClick={() => navigate('/insta-cash')}
+            className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow text-left"
+          >
+            <div className="flex items-center mb-4">
+              <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mr-4">
+                <Gift className="w-6 h-6 text-orange-600" />
+              </div>
+              <h3 className="text-lg font-semibold">Insta Cash Offer</h3>
+            </div>
+            <p className="text-gray-600">Get instant access to cash with our special offer</p>
+          </button>
+
+          <button 
+            onClick={() => navigate('/pre-approved')}
+            className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow text-left"
+          >
+            <div className="flex items-center mb-4">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                <CreditCard className="w-6 h-6 text-green-600" />
+              </div>
+              <h3 className="text-lg font-semibold">Pre-Approved Offers</h3>
+            </div>
+            <p className="text-gray-600">View your personalized pre-approved offers</p>
+          </button>
+
+          <button 
+            onClick={() => navigate('/pre-qualification')}
+            className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow text-left"
+          >
+            <div className="flex items-center mb-4">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                <FileText className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-semibold">Pre-Qualification</h3>
+            </div>
+            <p className="text-gray-600">Check your eligibility for various products</p>
+          </button>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Accounts Overview */}
         <div className="bg-white rounded-xl shadow-lg p-6">

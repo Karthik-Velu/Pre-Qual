@@ -1,62 +1,79 @@
 import React from 'react';
-import { Clock, DollarSign, CalendarDays, Percent } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Sun, ArrowRight, CheckCircle2 } from 'lucide-react';
 
-interface InstaCashOfferProps {
-  amount: number;
-  term: number;
-  apr: number;
-  monthlyPayment: number;
-  expiresIn: number;
-}
+export function InstaCashOffer() {
+  const navigate = useNavigate();
 
-export function InstaCashOffer({ amount, term, apr, monthlyPayment, expiresIn }: InstaCashOfferProps) {
   return (
-    <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-6 text-white shadow-lg">
-      <div className="flex justify-between items-start mb-6">
-        <div>
-          <h2 className="text-2xl font-bold mb-2">InstaCash Offer</h2>
-          <p className="text-blue-100">Pre-approved loan based on your cashflow</p>
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center">
+              <Sun className="w-8 h-8 text-orange-600" />
+              <span className="ml-2 text-xl font-bold">Suncoast Credit Union</span>
+            </div>
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="text-gray-600 hover:text-gray-900"
+            >
+              Back to Dashboard
+            </button>
+          </div>
         </div>
-        <div className="flex items-center bg-blue-500/30 rounded-full px-4 py-2">
-          <Clock className="w-4 h-4 mr-2" />
-          <span className="text-sm">Expires in {expiresIn}h</span>
-        </div>
-      </div>
+      </header>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-        <div>
-          <p className="text-blue-100 text-sm mb-1">Loan Amount</p>
-          <div className="flex items-center">
-            <DollarSign className="w-5 h-5 mr-1" />
-            <span className="text-xl font-bold">{amount.toLocaleString()}</span>
-          </div>
-        </div>
-        <div>
-          <p className="text-blue-100 text-sm mb-1">Term</p>
-          <div className="flex items-center">
-            <CalendarDays className="w-5 h-5 mr-1" />
-            <span className="text-xl font-bold">{term} months</span>
-          </div>
-        </div>
-        <div>
-          <p className="text-blue-100 text-sm mb-1">APR</p>
-          <div className="flex items-center">
-            <Percent className="w-5 h-5 mr-1" />
-            <span className="text-xl font-bold">{apr}%</span>
-          </div>
-        </div>
-        <div>
-          <p className="text-blue-100 text-sm mb-1">Monthly Payment</p>
-          <div className="flex items-center">
-            <DollarSign className="w-5 h-5 mr-1" />
-            <span className="text-xl font-bold">{monthlyPayment}</span>
-          </div>
-        </div>
-      </div>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle2 className="w-8 h-8 text-orange-600" />
+              </div>
+              <h1 className="text-3xl font-bold mb-4">Insta Cash Offer</h1>
+              <p className="text-gray-600">You're pre-approved for instant cash!</p>
+            </div>
 
-      <button className="w-full bg-white text-blue-600 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
-        Accept Offer
-      </button>
+            <div className="space-y-6">
+              <div className="bg-gray-50 p-6 rounded-lg">
+                <h2 className="text-xl font-semibold mb-4">Offer Details</h2>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-gray-600">Amount</p>
+                    <p className="text-2xl font-bold">$5,000</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Term</p>
+                    <p className="text-2xl font-bold">24 months</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">APR</p>
+                    <p className="text-2xl font-bold">8.99%</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Monthly Payment</p>
+                    <p className="text-2xl font-bold">$228</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                <p className="text-sm text-orange-800">
+                  This offer expires in 7 days. Funds can be deposited directly into your Suncoast account within 24 hours of approval.
+                </p>
+              </div>
+
+              <button
+                onClick={() => navigate('/pre-qualification')}
+                className="w-full py-4 bg-[#1C0A00] text-white rounded-lg hover:bg-[#2C1810] flex items-center justify-center"
+              >
+                Accept Offer <ArrowRight className="ml-2 w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
