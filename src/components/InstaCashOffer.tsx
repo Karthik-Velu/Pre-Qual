@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sun, ArrowRight, CheckCircle2, Calendar, Bank, Lock } from 'lucide-react';
+import { Sun, ArrowRight, CheckCircle2, Calendar, Bank, Lock, FileText } from 'lucide-react';
 
 interface Account {
   id: string;
@@ -17,8 +17,9 @@ export function InstaCashOffer() {
   const [firstPaymentDate, setFirstPaymentDate] = useState('');
   const [selectedAccount, setSelectedAccount] = useState('');
   const [otp, setOtp] = useState('');
-  const [otpSent, setOtpSent] = useState(false);
-  const [accounts, setAccounts] = useState<Account[]>([
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
+  const [accounts] = useState<Account[]>([
     { id: '1', name: 'Checking Account', number: '****4321', balance: 5234.89 },
     { id: '2', name: 'Savings Account', number: '****8765', balance: 12750.50 }
   ]);
@@ -35,27 +36,79 @@ export function InstaCashOffer() {
   const monthlyPayment = calculateMonthlyPayment(loanAmount, term);
 
   const handleLoanCustomization = () => {
-    setOtpSent(true);
     setStep(2);
   };
 
   const handleOTPVerification = () => {
-    // In a real app, verify OTP with backend
+    // Accept any OTP input
     setStep(3);
   };
 
   const handleDocuSign = () => {
-    // In a real app, integrate with DocuSign
     setStep(4);
   };
+
+  const renderStepIndicator = () => (
+    <div className="flex items-center justify-center mb-8">
+      {[1, 2, 3].map((s) => (
+        <div key={s} className="flex items-center">
+          <div className={`
+            relative flex items-center justify-center
+            ${s <= step ? 'text-orange-600' : 'text-gray-400'}
+          `}>
+            <div className={`
+              w-10 h-10 rounded-full border-2 flex items-center justify-center
+              ${s < step ? 'bg-orange-600 border-orange-600 text-white' : 
+                s === step ? 'border-orange-600 text-orange-600' : 
+                'border-gray-300 text-gray-400'}
+            `}>
+              {s < step ? <CheckCircle2 className="w-6 h-6" /> : s}
+            </div>
+            <span className="absolute -bottom-6 whitespace-nowrap text-sm font-medium">
+              {s === 1 ? 'Customize Loan' : s === 2 ? 'Verify Identity' : 'Sign Agreement'}
+            </span>
+          </div>
+          {s < 3 && (
+            <div className={`
+              w-24 h-0.5 mx-4
+              ${s < step ? 'bg-orange-600' : 'bg-gray-300'}
+            `} />
+          )}
+        </div>
+      ))}
+    </div>
+  );
 
   const renderStep = () => {
     switch (step) {
       case 1:
         return (
-          <div className="space-y-6">
+          <div className="space-y-8">
+            {/* Pre-approved Offer Details */}
+            <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-6 rounded-lg">
+              <h2 className="text-xl font-semibold mb-4">Your Pre-Approved Offer</h2>
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <p className="text-sm opacity-90">Maximum Amount</p>
+                  <p className="text-2xl font-bold">$10,000</p>
+                </div>
+                <div>
+                  <p className="text-sm opacity-90">Interest Rate</p>
+                  <p className="text-2xl font-bold">8.99% APR</p>
+                </div>
+                <div>
+                  <p className="text-sm opacity-90">Available Terms</p>
+                  <p className="text-lg">12-60 months</p>
+                </div>
+                <div>
+                  <p className="text-sm opacity-90">Funding Time</p>
+                  <p className="text-lg">Same Day*</p>
+                </div>
+              </div>
+            </div>
+
             <div className="bg-gray-50 p-6 rounded-lg">
-              <h2 className="text-xl font-semibold mb-4">Customize Your Loan</h2>
+              <h3 className="text-lg font-semibold mb-4">Customize Your Loan</h3>
               
               {/* Loan Amount Slider */}
               <div className="mb-6">
@@ -104,12 +157,34 @@ export function InstaCashOffer() {
                 </label>
                 <div className="relative">
                   <input
-                    type="date"
+                    type="text"
                     value={firstPaymentDate}
-                    onChange={(e) => setFirstPaymentDate(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-lg"
+                    onClick={() => setShowCalendar(true)}
+                    readOnly
+                    placeholder="Select date"
+                    className="w-full p-2 border border-gray-300 rounded-lg cursor-pointer"
                   />
                   <Calendar className="absolute right-3 top-2.5 text-gray-400 w-5 h-5" />
+                  
+                  {showCalendar && (
+                    <div className="absolute z-10 mt-1 bg-white border rounded-lg shadow-lg p-4">
+                      <div className="grid grid-cols-7 gap-2">
+                        {/* Simplified calendar for demo - you would use a proper calendar component in production */}
+                        {Array.from({ length: 31 }, (_, i) => (
+                          <button
+                            key={i}
+                            onClick={() => {
+                              setFirstPaymentDate(`2024-04-${i + 1}`);
+                              setShowCalendar(false);
+                            }}
+                            className="p-2 hover:bg-gray-100 rounded"
+                          >
+                            {i + 1}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -174,16 +249,14 @@ export function InstaCashOffer() {
                   type="text"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
+                  maxLength={6}
                   placeholder="Enter 6-digit code"
                   className="w-full p-3 border border-gray-300 rounded-lg text-center text-2xl tracking-widest"
                 />
               </div>
 
               <div className="text-center mt-4">
-                <button
-                  onClick={() => setOtpSent(true)}
-                  className="text-orange-600 hover:text-orange-700 text-sm"
-                >
+                <button className="text-orange-600 hover:text-orange-700 text-sm">
                   Resend Code
                 </button>
               </div>
@@ -202,52 +275,57 @@ export function InstaCashOffer() {
       case 3:
         return (
           <div className="space-y-6">
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <div className="text-center mb-6">
-                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FileText className="w-8 h-8 text-orange-600" />
-                </div>
-                <h2 className="text-xl font-semibold mb-2">Sign Loan Agreement</h2>
-                <p className="text-gray-600">
-                  Please review and sign the loan agreement to complete your application
-                </p>
+            <div className="bg-white border rounded-lg">
+              <div className="p-6 border-b">
+                <h2 className="text-xl font-semibold">Electronic Record and Signature Disclosure</h2>
               </div>
+              
+              <div className="p-6 max-h-96 overflow-y-auto">
+                <div className="prose prose-sm">
+                  <h3>1. ELECTRONIC DELIVERY OF DOCUMENTS</h3>
+                  <p>By agreeing to use electronic records and signatures, you consent to receive all communications, agreements, documents, notices, and disclosures electronically that we provide in connection with your loan.</p>
+                  
+                  <h3>2. HARDWARE AND SOFTWARE REQUIREMENTS</h3>
+                  <p>To access and retain electronic records, you will need:</p>
+                  <ul>
+                    <li>A computer or mobile device with internet connectivity</li>
+                    <li>A current web browser that includes 128-bit encryption</li>
+                    <li>Sufficient storage space to save documents or a printer</li>
+                  </ul>
 
-              <div className="bg-white p-6 rounded-lg border mb-6">
-                <h3 className="font-semibold mb-4">Loan Summary</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Loan Amount</span>
-                    <span className="font-medium">${loanAmount.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Term</span>
-                    <span className="font-medium">{term} months</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Monthly Payment</span>
-                    <span className="font-medium">${monthlyPayment}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">First Payment Date</span>
-                    <span className="font-medium">{firstPaymentDate}</span>
-                  </div>
+                  <h3>3. WITHDRAWING CONSENT</h3>
+                  <p>You may withdraw your consent to receive electronic records at any time by contacting us. However, withdrawal of consent may result in the termination of your loan application.</p>
+
+                  <h3>4. LOAN DETAILS</h3>
+                  <p>Loan Amount: ${loanAmount.toLocaleString()}</p>
+                  <p>Term: {term} months</p>
+                  <p>Monthly Payment: ${monthlyPayment}</p>
+                  <p>First Payment Date: {firstPaymentDate}</p>
+                  <p>Annual Percentage Rate (APR): 8.99%</p>
                 </div>
               </div>
 
-              <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-                <p className="text-sm text-orange-800">
-                  By signing, you agree to the terms and conditions of the loan agreement.
-                  The funds will be deposited into your selected account within 24 hours.
-                </p>
+              <div className="p-6 bg-gray-50 border-t">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={agreeToTerms}
+                    onChange={(e) => setAgreeToTerms(e.target.checked)}
+                    className="w-4 h-4 text-orange-600 rounded border-gray-300 focus:ring-orange-500"
+                  />
+                  <span className="text-sm text-gray-700">
+                    I agree to use electronic records and signatures
+                  </span>
+                </label>
               </div>
             </div>
 
             <button
               onClick={handleDocuSign}
-              className="w-full py-4 bg-[#1C0A00] text-white rounded-lg hover:bg-[#2C1810] flex items-center justify-center"
+              disabled={!agreeToTerms}
+              className="w-full py-4 bg-[#1C0A00] text-white rounded-lg hover:bg-[#2C1810] flex items-center justify-center disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
-              Sign Agreement <ArrowRight className="ml-2 w-5 h-5" />
+              Continue <ArrowRight className="ml-2 w-5 h-5" />
             </button>
           </div>
         );
@@ -317,29 +395,10 @@ export function InstaCashOffer() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="max-w-2xl mx-auto">
           <div className="bg-white rounded-xl shadow-lg p-8">
-            {/* Progress Steps */}
-            <div className="flex justify-between mb-8">
-              {[1, 2, 3].map((s) => (
-                <div key={s} className="flex items-center">
-                  <div className={`
-                    w-8 h-8 rounded-full flex items-center justify-center
-                    ${s < step ? 'bg-orange-600 text-white' : 
-                      s === step ? 'bg-orange-100 text-orange-600' : 
-                      'bg-gray-100 text-gray-400'}
-                  `}>
-                    {s}
-                  </div>
-                  {s < 3 && (
-                    <div className={`
-                      w-16 h-1 mx-2
-                      ${s < step ? 'bg-orange-600' : 'bg-gray-200'}
-                    `} />
-                  )}
-                </div>
-              ))}
+            {renderStepIndicator()}
+            <div className="mt-12">
+              {renderStep()}
             </div>
-
-            {renderStep()}
           </div>
         </div>
       </main>
