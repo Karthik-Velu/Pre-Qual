@@ -1,16 +1,53 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { Dashboard } from './components/Dashboard';
 import { InstaCashOffer } from './components/InstaCashOffer';
 import { PreApprovedOffer } from './components/PreApprovedOffer';
 import { PreQualification } from './components/PreQualification';
 
-interface LoginPageWrapperProps {
+interface LoginPageProps {
   setIsLoggedIn: (value: boolean) => void;
   setUsername: (value: string) => void;
 }
 
-function LoginPageWrapper({ setIsLoggedIn, setUsername }: LoginPageWrapperProps) {
+function HomePage() {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Welcome to PreQual</h1>
+          <p className="text-xl text-gray-600 mb-8">Your path to financial success starts here</p>
+          <div className="space-y-4">
+            <a
+              href="/login"
+              className="inline-block bg-blue-600 text-white px-6 py-3 rounded-md font-medium hover:bg-blue-700"
+            >
+              Get Started
+            </a>
+          </div>
+        </div>
+        
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h2 className="text-xl font-semibold mb-4">Pre-Approved Offers</h2>
+            <p className="text-gray-600">Discover your pre-approved loan offers with competitive rates.</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h2 className="text-xl font-semibold mb-4">InstaCash</h2>
+            <p className="text-gray-600">Quick cash solutions when you need them most.</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h2 className="text-xl font-semibold mb-4">Pre-Qualification</h2>
+            <p className="text-gray-600">Check your eligibility without affecting your credit score.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LoginPage({ setIsLoggedIn, setUsername }: LoginPageProps) {
+  const navigate = useNavigate();
   const [loginData, setLoginData] = useState({
     username: '',
     password: ''
@@ -18,19 +55,20 @@ function LoginPageWrapper({ setIsLoggedIn, setUsername }: LoginPageWrapperProps)
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Store the username in localStorage for persistence
     localStorage.setItem('username', loginData.username);
+    localStorage.setItem('isLoggedIn', 'true');
     setIsLoggedIn(true);
     setUsername(loginData.username);
+    navigate('/dashboard');
   };
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-xl shadow-lg">
         <div>
-          <h2 className="text-center text-3xl font-bold text-gray-900">Welcome to PreQual</h2>
+          <h2 className="text-center text-3xl font-bold text-gray-900">Sign In</h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Sign in to access your account
+            Access your PreQual account
           </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleLogin}>
@@ -80,24 +118,39 @@ function LoginPageWrapper({ setIsLoggedIn, setUsername }: LoginPageWrapperProps)
 }
 
 export default function App() {
-  // Initialize state with values from localStorage if they exist
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState(localStorage.getItem('username') || '');
-
-  // Check if user is "John Doe" for conditional rendering
+  const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('isLoggedIn') === 'true');
+  const [username, setUsername] = useState(() => localStorage.getItem('username') || '');
   const isJohnDoe = username.toLowerCase() === 'john doe';
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem('username');
+    const storedIsLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    
+    if (storedUsername && storedIsLoggedIn) {
+      setUsername(storedUsername);
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginPageWrapper setIsLoggedIn={setIsLoggedIn} setUsername={setUsername} />} />
+        <Route path="/" element={<HomePage />} />
+        <Route 
+          path="/login" 
+          element={
+            isLoggedIn ? 
+            <Navigate to="/dashboard" replace /> : 
+            <LoginPage setIsLoggedIn={setIsLoggedIn} setUsername={setUsername} />
+          } 
+        />
         <Route
           path="/dashboard"
           element={
             isLoggedIn ? (
               <Dashboard username={username} />
             ) : (
-              <Navigate to="/" replace />
+              <Navigate to="/login" replace />
             )
           }
         />
@@ -107,7 +160,7 @@ export default function App() {
             isLoggedIn ? (
               <InstaCashOffer />
             ) : (
-              <Navigate to="/" replace />
+              <Navigate to="/login" replace />
             )
           }
         />
