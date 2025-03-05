@@ -17,11 +17,15 @@ import {
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-export function Dashboard() {
+interface DashboardProps {
+  username: string;
+  onLogout: () => void;
+}
+
+export function Dashboard({ username, onLogout }: DashboardProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const loginData = location.state?.username || '';
-  const isJohnDoe = loginData.toLowerCase() === 'john doe';
+  const isJohnDoe = username.toLowerCase() === 'john doe';
 
   const navigationItems = [
     { name: 'Offers', icon: <Gift className="w-5 h-5" />, path: '/dashboard' },
@@ -120,14 +124,19 @@ export function Dashboard() {
       <div className="flex-1">
         <header className="bg-white shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              <h1 className="text-2xl font-bold text-gray-900">Offers</h1>
-              <button
-                onClick={() => navigate('/')}
-                className="text-gray-600 hover:text-gray-900"
-              >
-                Logout
-              </button>
+            <div className="flex justify-between items-center py-4">
+              <div className="flex items-center">
+                <span className="text-2xl font-bold">PreQual</span>
+              </div>
+              <div className="flex items-center space-x-4">
+                <span className="text-gray-600">Welcome, {username}</span>
+                <button 
+                  onClick={onLogout}
+                  className="px-4 py-2 text-gray-700 font-medium hover:text-red-600"
+                >
+                  Logout
+                </button>
+              </div>
             </div>
           </div>
         </header>
@@ -138,27 +147,37 @@ export function Dashboard() {
             {!isJohnDoe && (
               <section>
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">Your Pre-Approved Offers</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {preApprovedOffers.map((offer) => (
-                    <div
-                      key={offer.id}
-                      className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="bg-white rounded-xl shadow-sm p-6">
+                    <h3 className="text-lg font-semibold mb-2">Personal Loan</h3>
+                    <p className="text-gray-600 mb-4">Up to $25,000</p>
+                    <button 
                       onClick={() => navigate('/pre-approved')}
+                      className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
                     >
-                      <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mb-4">
-                        {offer.icon}
-                      </div>
-                      <h3 className="text-lg font-semibold mb-2">{offer.name}</h3>
-                      <p className="text-2xl font-bold mb-2">Up to ${offer.maxAmount.toLocaleString()}</p>
-                      <div className="space-y-1 text-sm text-gray-600">
-                        <p>From {offer.baseRate}% APR</p>
-                        <p>{offer.term.min}-{offer.term.max} months</p>
-                      </div>
-                      <button className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
-                        View Offer
-                      </button>
-                    </div>
-                  ))}
+                      View Offer
+                    </button>
+                  </div>
+                  <div className="bg-white rounded-xl shadow-sm p-6">
+                    <h3 className="text-lg font-semibold mb-2">Auto Loan</h3>
+                    <p className="text-gray-600 mb-4">Up to $35,000</p>
+                    <button 
+                      onClick={() => navigate('/pre-approved')}
+                      className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+                    >
+                      View Offer
+                    </button>
+                  </div>
+                  <div className="bg-white rounded-xl shadow-sm p-6">
+                    <h3 className="text-lg font-semibold mb-2">Credit Card</h3>
+                    <p className="text-gray-600 mb-4">Up to $10,000</p>
+                    <button 
+                      onClick={() => navigate('/pre-approved')}
+                      className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+                    >
+                      View Offer
+                    </button>
+                  </div>
                 </div>
               </section>
             )}
@@ -202,27 +221,17 @@ export function Dashboard() {
             )}
 
             {/* InstaCash Offer Section - Show for all users */}
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Quick Cash Solution</h2>
-              <div className="max-w-md">
-                <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl shadow-sm p-6 text-white">
-                  <div className="flex items-center justify-center w-12 h-12 bg-white bg-opacity-20 rounded-full mb-4">
-                    {instaCashOffer.icon}
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">InstaCash Offer</h3>
-                  <p className="text-3xl font-bold mb-2">Up to ${instaCashOffer.maxAmount.toLocaleString()}</p>
-                  <div className="space-y-1 text-sm opacity-90">
-                    <p>From {instaCashOffer.baseRate}% APR</p>
-                    <p>{instaCashOffer.term.min}-{instaCashOffer.term.max} months</p>
-                    <p>Same Day Funding Available*</p>
-                  </div>
-                  <button 
-                    onClick={() => navigate('/instacash')}
-                    className="mt-4 w-full bg-white text-orange-600 py-2 px-4 rounded-lg hover:bg-orange-50 transition-colors"
-                  >
-                    Get Cash Now
-                  </button>
-                </div>
+            <section className="mt-12">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">InstaCash</h2>
+              <div className="bg-white rounded-xl shadow-sm p-6 max-w-md">
+                <h3 className="text-lg font-semibold mb-2">Quick Cash Solution</h3>
+                <p className="text-gray-600 mb-4">Need cash fast? Get up to $2,500 instantly</p>
+                <button 
+                  onClick={() => navigate('/instacash')}
+                  className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+                >
+                  Get InstaCash
+                </button>
               </div>
             </section>
           </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, Link } from 'react-router-dom';
 import { Dashboard } from './components/Dashboard';
 import { InstaCashOffer } from './components/InstaCashOffer';
 import { PreApprovedOffer } from './components/PreApprovedOffer';
@@ -11,20 +11,38 @@ interface LoginPageProps {
 }
 
 function HomePage() {
+  const navigate = useNavigate();
+  
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center">
+              <span className="text-2xl font-bold">PreQual</span>
+            </div>
+            <div className="flex items-center space-x-4">
+              <button 
+                onClick={() => navigate('/login')}
+                className="px-4 py-2 text-gray-700 font-medium hover:text-blue-600"
+              >
+                Login
+              </button>
+              <button 
+                onClick={() => navigate('/eligibility')}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                Check Eligibility
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Welcome to PreQual</h1>
           <p className="text-xl text-gray-600 mb-8">Your path to financial success starts here</p>
-          <div className="space-y-4">
-            <a
-              href="/login"
-              className="inline-block bg-blue-600 text-white px-6 py-3 rounded-md font-medium hover:bg-blue-700"
-            >
-              Get Started
-            </a>
-          </div>
         </div>
         
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -41,7 +59,7 @@ function HomePage() {
             <p className="text-gray-600">Check your eligibility without affecting your credit score.</p>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
@@ -132,6 +150,13 @@ export default function App() {
     }
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('username');
+    setIsLoggedIn(false);
+    setUsername('');
+  };
+
   return (
     <Router>
       <Routes>
@@ -148,7 +173,7 @@ export default function App() {
           path="/dashboard"
           element={
             isLoggedIn ? (
-              <Dashboard username={username} />
+              <Dashboard username={username} onLogout={handleLogout} />
             ) : (
               <Navigate to="/login" replace />
             )
